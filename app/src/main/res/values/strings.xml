@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Onyx Demo REST Client</string>
+    <string name="onyx_logo">Onyx Logo</string>
+
+    <string name="onyx_license">@string/license_key_value</string>
+    <!--
+        For example on a local area network
+        <string name="onyx_node_url">http://192.168.1.100:3000/</string>
+    -->
+    <string name="onyx_node_url">http://YOUR_ONYX_NODE_URL_HERE:3000/</string>
+</resources>
