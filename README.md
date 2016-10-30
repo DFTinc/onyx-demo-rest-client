@@ -14,7 +14,7 @@ You should receive a license key of the form XXXX-XXXX-XXXX-X-X at your provided
 Next, you can clone our sample repository on the command-line using the following commands:
 
     > cd <YOUR_DEVELOPMENT_ROOT>
-    > git clone https://github.com/DFTinc/onyx-demo-rest-api.git
+    > git clone https://github.com/DFTinc/onyx-demo-rest-client.git
 
 Alternatively, you can clone the project via Android Studio:
 <br/>
