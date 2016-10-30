@@ -1,4 +1,4 @@
-# onyx-demo-rest-api
+# onyx-demo-rest-client
 Sample showing how to interact with onyx-node-rest project's REST API via Android.
 
 Getting Started
