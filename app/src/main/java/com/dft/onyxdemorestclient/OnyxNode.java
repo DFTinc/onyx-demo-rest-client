@@ -51,12 +51,35 @@ public class OnyxNode {
         }
     }
 
+    public static class GenerateIsoFingerprintTemplateRequest {
+        final String src;
+
+        GenerateIsoFingerprintTemplateRequest(String src) {
+            this.src = src;
+        }
+    }
+
+    public static class GenerateIsoFingerprintTemplateResponse {
+        final int fingerLocation;
+        final double quality;
+        final String data;
+
+        GenerateIsoFingerprintTemplateResponse(int fingerLocation, double quality, String data) {
+            this.fingerLocation = fingerLocation;
+            this.quality = quality;
+            this.data = data;
+        }
+    }
+
     public interface OnyxNodeService {
         @POST("api/methods/computenfiq")
         Call<ComputeNfiqResponse> computeNfiq(@Body ComputeNfiqRequest request);
 
         @POST("api/methods/pyramidimage")
         Call<PyramidImageResponse> pyramidImage(@Body PyramidImageRequest request);
+
+        @POST("api/methods/generateisofingerprinttemplate")
+        Call<GenerateIsoFingerprintTemplateResponse> generateIsoFingerprintTemplate(@Body GenerateIsoFingerprintTemplateRequest request);
     }
 
     private static OnyxNodeService service;

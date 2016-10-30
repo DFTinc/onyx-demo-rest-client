@@ -17,7 +17,6 @@ import com.dft.onyxcamera.ui.CaptureMetrics;
 import com.dft.onyxcamera.ui.OnyxFragment;
 
 import org.opencv.android.OpenCVLoader;
-import org.opencv.core.Mat;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,11 +29,12 @@ public class OnyxDemoRestClient extends Activity {
 
     public enum CommandType {
         PYRAMID_IMAGE,
-        COMPUTE_NFIQ
+        COMPUTE_NFIQ,
+        GENERATE_ISO_FINGERPRINT_TEMPLATE
     }
 
     // TODO: make this selectable from the UI.
-    CommandType commandType = CommandType.COMPUTE_NFIQ;
+    CommandType commandType = CommandType.GENERATE_ISO_FINGERPRINT_TEMPLATE;
 
     static {
         if (!OpenCVLoader.initDebug()) {
@@ -92,7 +92,7 @@ public class OnyxDemoRestClient extends Activity {
         public void onWsqReady(byte[] wsqData, CaptureMetrics metrics) {
             OnyxNode.OnyxNodeService service = OnyxNode.getOnyxNodeService(getString(R.string.onyx_node_url));
 
-            switch(commandType) {
+            switch (commandType) {
                 case PYRAMID_IMAGE: {
                     double[] scales = {0.8, 1.0, 1.2};
                     OnyxNode.PyramidImageRequest request = new OnyxNode.PyramidImageRequest(Base64.encodeToString(wsqData, Base64.DEFAULT), scales);
@@ -104,7 +104,7 @@ public class OnyxDemoRestClient extends Activity {
                             String[] imagePyramidBase64 = response.body().imagePyramid;
                             handleResponseSuccess("imagePyramidBase64.length: " + imagePyramidBase64.length);
 
-                            for(int i = 0 ; i < imagePyramidBase64.length; i++) {
+                            for (int i = 0; i < imagePyramidBase64.length; i++) {
                                 byte[] ithWsqData = Base64.decode(imagePyramidBase64[i], Base64.DEFAULT);
 
                                 // TODO: do something with WSQ pyramid level i...
@@ -131,6 +131,31 @@ public class OnyxDemoRestClient extends Activity {
 
                         @Override
                         public void onFailure(Call<OnyxNode.ComputeNfiqResponse> call, Throwable t) {
+                            handleResponseFailure(t.getMessage());
+                        }
+                    });
+                }
+                break;
+
+                case GENERATE_ISO_FINGERPRINT_TEMPLATE: {
+                    OnyxNode.GenerateIsoFingerprintTemplateRequest request = new OnyxNode.GenerateIsoFingerprintTemplateRequest(Base64.encodeToString(wsqData, Base64.DEFAULT));
+                    Call<OnyxNode.GenerateIsoFingerprintTemplateResponse> call = service.generateIsoFingerprintTemplate(request);
+                    call.enqueue(new Callback<OnyxNode.GenerateIsoFingerprintTemplateResponse>() {
+
+                        @Override
+                        public void onResponse(
+                                Call<OnyxNode.GenerateIsoFingerprintTemplateResponse> call,
+                                Response<OnyxNode.GenerateIsoFingerprintTemplateResponse> response) {
+                            handleResponseSuccess("Template quality: " + response.body().quality);
+
+                            // TODO: Use ISO fingerprint template data...
+                            byte[] isoTemplate = Base64.decode(response.body().data, Base64.DEFAULT);
+                        }
+
+                        @Override
+                        public void onFailure(
+                                Call<OnyxNode.GenerateIsoFingerprintTemplateResponse> call,
+                                Throwable t) {
                             handleResponseFailure(t.getMessage());
                         }
                     });
